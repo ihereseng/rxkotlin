@@ -2,6 +2,7 @@ package com.example.rxkotlin
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.*
 import android.widget.TableLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -27,12 +28,16 @@ class MainActivity : AppCompatActivity(), IMainPresenter.View {
     }
 
     override fun setUserToTable() {
+
         MainPresenter().getUser()
+            .doOnSubscribe {
+                binding.progressBar.visibility = View.VISIBLE
+            }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onNext = {
-
+                    binding.progressBar.visibility = View.GONE
                     it.results?.let { it1 ->
                         createAndSetUserToTableRow(it1)
                         createTableHeader()

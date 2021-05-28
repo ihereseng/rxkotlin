@@ -32,10 +32,10 @@ class MainActivity : AppCompatActivity(), IMainPresenter.View {
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onNext = {
-                    if (it.results != null) {
-                        createAndSetUserToTableRow(it.results)
-                    } else {
 
+                    it.results?.let { it1 ->
+                        createAndSetUserToTableRow(it1)
+                        createTableHeader()
                     }
                 },
                 onError = {
@@ -43,8 +43,36 @@ class MainActivity : AppCompatActivity(), IMainPresenter.View {
                     createErrorUser("Something bad happen please try again later")
                 }
             )
+    }
 
+    private fun createTableHeader() {
+        val row = TableRow(this)
+        row.layoutParams =
+            TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, 0)
+        row.gravity = Gravity.CENTER_VERTICAL
+        val imgHeaderView = TextView(this)
+        val nameHeaderView = TextView(this)
+        val ageHeaderView = TextView(this)
+        val emailHeaderView = TextView(this)
 
+        imgHeaderView.text = "Picture"
+        nameHeaderView.text = "Name"
+        ageHeaderView.text = "Age"
+        emailHeaderView.text = "Email"
+
+        imgHeaderView.setPadding(Converter.dpToPixel(15, this))
+        nameHeaderView.setPadding(Converter.dpToPixel(15, this))
+        ageHeaderView.setPadding(Converter.dpToPixel(15, this))
+        emailHeaderView.setPadding(Converter.dpToPixel(15, this))
+
+        // TODO: 28/5/2021 AD
+        // Implement responsive header
+
+        row.addView(imgHeaderView)
+        row.addView(nameHeaderView)
+        row.addView(ageHeaderView)
+        row.addView(emailHeaderView)
+        binding.tableHeader.addView(row)
     }
 
     private fun createAndSetUserToTableRow(results: List<Result>) {

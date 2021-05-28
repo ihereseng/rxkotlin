@@ -6,9 +6,11 @@ import android.widget.*
 import android.widget.TableLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import com.example.rxkotlin.databinding.ActivityMainBinding
 import com.example.rxkotlin.model.Result
+import com.example.rxkotlin.util.Converter
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -61,6 +63,11 @@ class MainActivity : AppCompatActivity(), IMainPresenter.View {
                 result.name?.title + " " + result.name?.first + " " + result.name?.last
             ageTextView.text = result.dob.age.toString()
             emailTextView.text = result.email.toString()
+
+            imgView.setPadding(Converter.dpToPixel(15, this))
+            nameTextView.setPadding(Converter.dpToPixel(15, this))
+            ageTextView.setPadding(Converter.dpToPixel(15, this))
+            emailTextView.setPadding(Converter.dpToPixel(15, this))
 
             row.addView(imgView)
             row.addView(nameTextView)

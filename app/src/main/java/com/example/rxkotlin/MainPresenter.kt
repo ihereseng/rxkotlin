@@ -7,6 +7,6 @@ import io.reactivex.Observable
 class MainPresenter: IMainPresenter.Presenter {
 
     override fun getUser(): Observable<User> {
-        return RetrofitBuilder.buildService().getUser("2")
+        return RetrofitBuilder.buildService().getUser("20")
     }
 }

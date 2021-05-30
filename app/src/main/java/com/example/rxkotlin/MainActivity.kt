@@ -13,41 +13,32 @@ import com.example.rxkotlin.databinding.ActivityMainBinding
 import com.example.rxkotlin.model.Result
 import com.example.rxkotlin.util.Converter
 import com.squareup.picasso.Picasso
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-
 
 class MainActivity : AppCompatActivity(), IMainPresenter.View {
     private lateinit var binding: ActivityMainBinding
+    private val presenter = MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        presenter.view = this
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setUserToTable()
+        getUser()
     }
 
-    override fun setUserToTable() {
+    override fun getUser() {
+        binding.progressBar.visibility = View.VISIBLE
+        presenter.getUser()
+    }
 
-        MainPresenter().getUser()
-            .doOnSubscribe {
-                binding.progressBar.visibility = View.VISIBLE
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onNext = {
-                    binding.progressBar.visibility = View.GONE
-                    it.results?.let { it1 ->
-                        createAndSetUserToTableRow(it1)
-                        createTableHeader()
-                    }
-                },
-                onError = {
-                    println("Error get user $it")
-                    createErrorUser("Something bad happen please try again later")
-                }
-            )
+    override fun onUserLoaded(results: List<Result>) {
+        binding.progressBar.visibility = View.GONE
+        createTableHeader()
+        createAndSetUserToTableRow(results)
+    }
+
+    override fun onUserErrorLoaded(errorText: String) {
+        binding.progressBar.visibility = View.GONE
+        createErrorUser(errorText)
     }
 
     private fun createTableHeader() {
